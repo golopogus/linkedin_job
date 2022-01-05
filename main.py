@@ -5,6 +5,7 @@ import time
 from check_if_hr import check_if_hr
 from create_html import create_html
 from check_new_jobs import check_new_jobs
+from send_email import send_email
 from os import path
 from bs4 import BeautifulSoup
 from urllib.request import urlretrieve
@@ -24,13 +25,15 @@ for job in jobs:
     time.sleep(1)
     job_url = job.get("href")
     job_title = job.find("span")
-    if check_if_hr(job_url):
+    hr_job_url = check_if_hr(job_url)
+    if hr_job_url != False:
         job_text_split = job_title.text.split()
         job_text = ' '.join(job_text_split)
-        job_dict[job_text] = job_url
+        job_dict[job_text] = hr_job_url
 
-check_new_jobs(job_dict)
-#create_html(job_dict)
+if check_new_jobs(job_dict):
+    create_html(job_dict)
+    
 
     
 
